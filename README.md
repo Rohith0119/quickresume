@@ -1,3 +1,29 @@
+# QuickResume
+
+This repository contains a lightweight React + Vite scaffold for a rebranded resume builder called QuickResume. The current branch `feature/hero-ui` implements the homepage hero, signup card, and base styles.
+
+Preview
+
+- Dev server: `npm run dev`
+- Build: `npm run build`
+- Preview production build: `npm run preview`
+
+If you don't have Node installed, install Node 18+ from https://nodejs.org/.
+
+Notes
+
+- CI currently runs a build-only job on pushes to `main`. The `feature/hero-ui` branch contains UI improvements and a PR can be opened for review.
+- Styling is plain CSS in `src/styles.css`. If you'd prefer Tailwind, I can convert the styles.
+
+How to contribute
+
+1. Create a branch off `main`.
+2. Make changes, run `npm run build` locally.
+3. Push and open a PR.
+
+Contact
+
+Open issues/PRs on the GitHub repository: https://github.com/Rohith0119/quickresume
 # quickresume (React + Vite)
 
 Run locally:
