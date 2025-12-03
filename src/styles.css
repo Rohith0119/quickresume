@@ -37,5 +37,22 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'He
   .hero-content{flex-direction:column}
   .hero-form{width:100%}
 }
+
+/* Small interaction polish */
+.btn{transition:transform .16s ease, box-shadow .16s ease}
+.btn.primary:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(79,70,229,0.18)}
+.btn.secondary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(2,6,23,0.06)}
+
+/* subtle floating illustration effect for hero block */
+.hero-left{animation:floaty 8s ease-in-out infinite}
+@keyframes floaty{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+  100%{transform:translateY(0)}
+}
+
+/* improved focus styles for accessibility */
+a:focus, button:focus, input:focus{outline:3px solid rgba(79,70,229,0.18);outline-offset:3px}
+
 /* minimal styles (component styles are inline) */
 html, body, #root { height: 100%; }
