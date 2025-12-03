@@ -30,8 +30,8 @@ jobs:
         run: npm run build
 
       - name: Upload artifact for GitHub Pages
-        # use the newer v2 which avoids the deprecated upload-artifact v3 under the hood
-        uses: actions/upload-pages-artifact@v2
+        # use the recommended v1 which is the published stable version for pages artifacts
+        uses: actions/upload-pages-artifact@v1
         with:
           path: ./dist
 
