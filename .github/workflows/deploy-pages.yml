@@ -10,7 +10,7 @@ permissions:
   id-token: write
 
 jobs:
-  build-deploy:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,18 +27,30 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./dist
-
-  deploy:
-    needs: build-deploy
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy-pages.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deploy-pages
-        uses: actions/deploy-pages@v1
+      - name: Deploy to gh-pages branch (manual)
+        env:
+          REPO: ${{ github.repository }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -e
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir out
+          git clone --depth 1 https://${TOKEN}@github.com/${REPO} out
+          cd out
+          if git ls-remote --exit-code --heads origin gh-pages; then
+            git checkout gh-pages
+            git rm -rf . || true
+          else
+            git checkout --orphan gh-pages
+            git rm -rf . || true
+          fi
+          cp -r ../dist/. .
+          git add --all
+          if git diff --quiet --exit-code; then
+            echo "No changes to deploy"
+          else
+            git commit -m "Deploy: ${SHA}"
+            git push https://${TOKEN}@github.com/${REPO} HEAD:gh-pages --force
+          fi
