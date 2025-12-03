@@ -12,44 +12,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      name: CI - build only (temp)
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      on:
+        push:
+          branches: [ main ]
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      jobs:
+        build:
+          runs-on: ubuntu-latest
 
-      - name: Install dependencies
-        run: npm install
+          steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-      - name: Build
-        run: npm run build
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: '18'
 
-      - name: Upload artifact for GitHub Pages
-        # use the recommended v1 which is the published stable version for pages artifacts
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./dist
+            - name: Install dependencies
+              run: npm install
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
+            - name: Build
+              run: npm run build
