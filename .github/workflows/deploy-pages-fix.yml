@@ -1,0 +1,57 @@
+name: Deploy to GitHub Pages (fix)
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to gh-pages branch
+        env:
+          REPO: ${{ github.repository }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -e
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir out
+          git clone --depth 1 https://${TOKEN}@github.com/${REPO} out
+          cd out
+          if git ls-remote --exit-code --heads origin gh-pages; then
+            git checkout gh-pages
+            git rm -rf . || true
+          else
+            git checkout --orphan gh-pages
+            git rm -rf . || true
+          fi
+          cp -r ../dist/. .
+          git add --all
+          if git diff --quiet --exit-code; then
+            echo "No changes to deploy"
+          else
+            git commit -m "Deploy: ${SHA}"
+            git push https://${TOKEN}@github.com/${REPO} HEAD:gh-pages --force
+          fi
