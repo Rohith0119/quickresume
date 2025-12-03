@@ -1,31 +1,18 @@
 
-name: Build and Deploy to GitHub Pages (official)
+name: CI - runner smoke test
 
 on:
   push:
     branches: [ main ]
 
-permissions:
-  contents: read
-
 jobs:
-  build:
+  smoke:
     runs-on: ubuntu-latest
-    permissions:
-      name: CI - runner smoke test
 
-      on:
-        push:
-          branches: [ main ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      jobs:
-        smoke:
-          runs-on: ubuntu-latest
-
-          steps:
-            - name: Checkout repository
-              uses: actions/checkout@v3
-
-            - name: Smoke test
-              run: |
-                echo "Runner smoke test - OK"
+      - name: Smoke test
+        run: |
+          echo "Runner smoke test - OK"
